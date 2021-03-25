@@ -40,6 +40,11 @@ cargo build --release --manifest-path rust/optimized/Cargo.toml
 ./rust/optimized/target/release/countwords <kjvbible_x10.txt | python3 normalize.py >output.txt
 git diff --exit-code output.txt
 
+echo Rust optimized-unsafe
+cargo build --release --manifest-path rust/optimized-unsafe/Cargo.toml
+./rust/optimized-unsafe/target/release/countwords <kjvbible_x10.txt | python3 normalize.py >output.txt
+git diff --exit-code output.txt
+
 echo Rust optimized trie
 cargo build --release --manifest-path rust/optimized-trie/Cargo.toml
 ./rust/optimized-trie/target/release/countwords <kjvbible_x10.txt | python3 normalize.py >output.txt
@@ -180,7 +185,7 @@ git diff --exit-code output.txt
 
 echo OCaml simple
 ocamlopt.opt -O3 simple.ml -o simple-ml
-OCAMLRUNPARAM=o=120,a=2 ./simple-ml <kjvbible_x10.txt | python3 normalize.py >output.txt
+./simple-ml <kjvbible_x10.txt | python3 normalize.py >output.txt
 git diff --exit-code output.txt
 
 echo Lua simple
@@ -209,6 +214,25 @@ git diff --exit-code output.txt
 echo Zig simple
 zig build-exe -OReleaseFast --name simple-zig simple.zig
 ./simple-zig <kjvbible_x10.txt | python3 normalize.py >output.txt
+git diff --exit-code output.txt
+
+echo Zig optimized
+zig build-exe -OReleaseFast --name optimized-zig optimized.zig
+./optimized-zig <kjvbible_x10.txt | python3 normalize.py >output.txt
+git diff --exit-code output.txt
+
+echo Common Lisp simple
+sbcl --load simple.lisp --eval "(sb-ext:save-lisp-and-die #p\"simple-cl\" :toplevel #'main :executable t :purify t)"
+./simple-cl <kjvbible_x10.txt | python3 normalize.py >output.txt
+git diff --exit-code output.txt
+
+echo Pascal simple
+fpc -O3 -osimple-pas simple.pas
+./simple-pas <kjvbible_x10.txt | python3 normalize.py >output.txt
+git diff --exit-code output.txt
+
+echo Tcl simple
+tclsh simple.tcl <kjvbible_x10.txt | python3 normalize.py >output.txt
 git diff --exit-code output.txt
 
 echo Racket simple
